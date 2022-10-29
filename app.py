@@ -10,8 +10,14 @@ def fequency_domain(signal,sr,title,f_ratio=1):
         freq=np.fft.fft(signal)
         freq_mag = np.absolute(freq)
         f = np.linspace(0, sr, len(freq_mag )) 
-        fig=px.line(x=f, y=freq_mag) 
-        #st.plotly_chart(fig,use_container_width=True)
+        fig, ax = plt.subplots(nrows=1, sharex=True, sharey=True)
+        fig.set_figheight(4)
+        fig.set_figwidth(16)
+        ax.set(title='Input audio')
+        line, = ax.plot(f, freq_mag)
+        #the_plot = st.pyplot(plt)
+        st.pyplot(fig)
+        
 file_uploader = st.sidebar.file_uploader(label="",  type=[ 'wav'])
 if file_uploader is not None:  # File > 0 bytes
         file_details = {"FileName": file_uploader.name,
