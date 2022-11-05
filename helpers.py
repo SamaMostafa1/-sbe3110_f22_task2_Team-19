@@ -3,8 +3,10 @@ this file contains helper functions..
 """
 ################################## Essential imports ###################################
 import librosa
+import numpy as np
 import librosa.display
 import streamlit as st
+import  streamlit_vertical_slider  as svs
 from matplotlib import pyplot as plt
 import wavio
 ################################## Functions defination ################################
@@ -57,3 +59,20 @@ def changed_audio(signal_changed_amplitude, sampling_rate):
     audio_ = audio_file.read()
     st.audio(audio_, format='audio/wav')
 ########################################################################################
+def create_sliders(key,number_sliders):
+    slider_value=np.zeros(number_sliders)
+    columns=np.zeros(number_sliders)
+    columns=st.columns(number_sliders)
+    for i in range(number_sliders):
+        with columns[i]:
+            st.markdown(key[i])
+            slider_value[i]=svs.vertical_slider(key=key[i],
+                                step=1, 
+                                min_value=0, 
+                                max_value=100,
+                                default_value=0,
+                                slider_color= 'blue',
+                                track_color='lightgray',
+                                thumb_color = 'blue' ,
+                                )
+    return slider_value
