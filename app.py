@@ -18,57 +18,71 @@ def handle_uploaded_audio_file(uploaded_file):
 
 def plot_wave(y, sr):
     fig, ax = plt.subplots()
-    img = librosa.display.waveshow(y, sr=sr, x_axis="time", ax=ax)
+    ax.set(title="Waveform")
+    img = librosa.display.waveshow(y, sr=sr, ax=ax)
+    plt.xlabel("Time (s)")
+    plt.ylabel("Amplitude")
     return plt.gcf()
 
-# def plot_transformation(y, sr, transformation_name):
-#     D = librosa.stft(y)  # STFT of y
-#     S_db = librosa.amplitude_to_db(np.abs(D), ref=np.max)
-#     fig, ax = plt.subplots()
-#     img = librosa.display.specshow(S_db, x_axis='time', y_axis='linear', ax=ax)
-#     ax.set(title=transformation_name)
-#     fig.colorbar(img, ax=ax, format="%+2.f dB")
-#     return plt.gcf()
+def plot_transformation(y, transformation_name):
+    D = librosa.stft(y)  # STFT of y
+    S_db = librosa.amplitude_to_db(np.abs(D), ref=np.max)
+    fig, ax = plt.subplots()
+    img = librosa.display.specshow(S_db, x_axis='time', y_axis='linear', ax=ax)
+    ax.set(title="Spectrogram")
+    plt.xlabel("Time (s)")
+    plt.ylabel("Frequency (Hz)")
+    fig.colorbar(img, ax=ax, format="%+2.f dB")
+    return plt.gcf()
 
 def spacing():
     st.markdown("<br></br>", unsafe_allow_html=True)
 
-def plot_audio_transformations(y, sr):
-    # st.markdown(f"<h4 style='text-align: center;'>Original</h5>",unsafe_allow_html=True)
-    # st.pyplot(plot_transformation(y, sr, "Original"))
-    st.markdown(f"<h4 style='text-align: center;'>Wave Plot </h5>",unsafe_allow_html=True)
-    st.pyplot(plot_wave(y, sr))
+def plot_audio_transformations(y, sr, music):
+    cols = [1,1,1]
+    col1,col2,col3 = st.columns(cols)
+    with col1:
+        st.pyplot(plot_transformation(y, "Original"))
+    with col2:
+        st.pyplot(plot_wave(y, sr))
+    with col3:
+        song, sr = librosa.load(music)
+        fequency_domain(song,sr)
     y = y
     sr = sr
 
 def action(file):
     if file is not None:
         y, sr = handle_uploaded_audio_file(file)
-    plot_audio_transformations(y, sr)
+    plot_audio_transformations(y, sr, music)
 
-def main():
-    music = st.sidebar.file_uploader(label="Select a file", type=[".wav"])
+def main1():
     if music is not None:
+        st.markdown(f"<h1 style='text-align: center';>Input Signal</h1>",unsafe_allow_html=True)
         action(music)
         st.sidebar.audio(music)
-        song, sr = librosa.load(music)
-        fequency_domain(song,sr,'freq',0.1)
+        st.markdown(f"<h1 style='text-align: center';>Output Signal</h1>",unsafe_allow_html=True)
 
-def fequency_domain(signal,sr,title,f_ratio=1):
+def fequency_domain(signal,sr):
         freq=np.fft.fft(signal)
         freq_mag = np.absolute(freq)
         f = np.linspace(0, sr, len(freq_mag )) 
         fig, ax = plt.subplots(nrows=1, sharex=True, sharey=True)
-        fig.set_figheight(4)
-        fig.set_figwidth(16)
-        ax.set(title='Input audio')
-        line = ax.plot(f, freq_mag)
-        st.markdown(f"<h4 style='text-align: center;'>Frequency Plot </h5>",unsafe_allow_html=True)
+        ax.set(title="Signal Spectrum")
+        ax.plot(f, freq_mag)
+        plt.xlabel("Frequency (Hz)")
+        plt.ylabel("Amplitude")
         st.pyplot(fig)
 
 if __name__ == "__main__":
-    main()
+    type = st.sidebar.radio("Mode :",('Uniform Range','Vowel','Musical Instrument','Biological Signal Abnormality'))
+    if (type == 'Uniform Range' or type == 'Vowel' or type == 'Musical Instrument' ):
+        music = st.sidebar.file_uploader(label="Select a file", type=".wav")
+        if type == 'Uniform Range': main1()
+        # elif type == 'Vowel': main2()
+        # elif type == 'Musical Instrument': main3()
+    else:
+        medical_file = st.sidebar.file_uploader(label="", type=".csv")
 
-hide_st_style =""" <style> #MainMenu {visibility: hidden;} footer {visibility: hidden;} header {visibility: hidden;}
-                    </style>"""
+hide_st_style =""" <style> #MainMenu {visibility: hidden;} footer {visibility: hidden;} header {visibility: hidden;} </style>"""
 st.markdown(hide_st_style, unsafe_allow_html=True)
