@@ -4,7 +4,7 @@ the main class
 import numpy as np
 
 class Equalizer():
-    ###############################################################################################
+###############################################################################################
     def __init__(self, signal_amplitude, sampling_rate=1):
         # self.frequency_ranges=frequency_ranges
         self.signal_amplitude = signal_amplitude
