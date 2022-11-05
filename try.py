@@ -4,11 +4,9 @@ import librosa.display
 import streamlit as st
 from matplotlib import pyplot as plt
 import wavio
-from scipy.io.wavfile import write
-import soundfile as sf
 
 signal_temporary_amplitude=[]
-file_uploaded = st.file_uploader(label="",  type=[ 'wav']) 
+file_uploaded = st.file_uploader(label="upload",  type=[ 'wav']) 
 if file_uploaded :  
         file_details = {"FileName": file_uploaded.name,
                         "FileType": file_uploaded.type,
@@ -25,6 +23,8 @@ if file_uploaded :
                     librosa.display.waveshow(sound_amplitude, sr=sampling_rate, x_axis="time",ax=ax)
                     st.pyplot(fig)
                     signal_temporary_amplitude=sound_amplitude
+                    st.write("signal temp before any")
+                    st.write(signal_temporary_amplitude)
                     frequency=np.fft.rfftfreq(len( sound_amplitude),1/ sampling_rate)[:len(sound_amplitude)//2]
                     fft_parameters= np.fft.fft(sound_amplitude)[:len(sound_amplitude)//2]
                     frequency_phase = np.angle(fft_parameters)
@@ -38,7 +38,7 @@ if file_uploaded :
                     #the_plot = st.pyplot(plt)
                     st.pyplot(fig)
                     for i in range(len(frequency)):
-                        if 0<frequency[i]<4000 :
+                        if 680<frequency[i]<1500 :
                             temporary_frequency_magnitude[i] =frequency_magnitude[i]*0
                     fig2, ax = plt.subplots(nrows=1, sharex=True, sharey=True)
                     fig2.set_figheight(4)
@@ -49,6 +49,8 @@ if file_uploaded :
                     complex_parameters = np.multiply(
                     temporary_frequency_magnitude, np.exp(np.multiply(1j, frequency_phase)))
                     signal_temporary_amplitude = np.fft.irfft(complex_parameters)
+                    st.write("signal temp after irfft")
+                    st.write(signal_temporary_amplitude)
                     fig, ax = plt.subplots()
                     librosa.display.waveshow(signal_temporary_amplitude, sr=sampling_rate, x_axis="time",ax=ax)
                     st.pyplot(fig)
@@ -56,7 +58,9 @@ if file_uploaded :
                     audio_file = open('myfileout.wav', 'rb')
                     audio_ = audio_file.read()
                     st.audio(audio_, format='audio/wav')
-                      
+                    st.write(sound_amplitude)
+                    st.write(signal_temporary_amplitude)
+       
                     #st.audio(myfileout.wav)
                 
     # filtered=[]
