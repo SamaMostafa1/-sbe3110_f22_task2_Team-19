@@ -145,9 +145,9 @@ if file_uploaded :
                     st.pyplot(fig)
                     for i in range(len(frequency)):
                         temporary_frequency_magnitude[i] =frequency_magnitude[i]*2
-                        if 700<frequency[i]<2800 :
-                            temporary_frequency_magnitude[i] =frequency_magnitude[i]/20
-                            frequency_phase[i]=frequency_phase[i]/20
+                        if 760<frequency[i]<2800 :
+                            temporary_frequency_magnitude[i] =frequency_magnitude[i]/2
+                            frequency_phase[i]=frequency_phase[i]/2
                     fig2, ax = plt.subplots(nrows=1, sharex=True, sharey=True)
                     fig2.set_figheight(4)
                     fig2.set_figwidth(16)
