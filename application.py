@@ -14,7 +14,7 @@ def app(application_type):
     st.write(application_type)
     file_uploaded = st.file_uploader(label="upload", type=['wav'], label_visibility='collapsed')
     names=['a','b','c','d','e','f','g','h','i','j']
-    #value=np.zeros(10)
+    value=[np.zeros(10)]
     if file_uploaded:
         value=helpers.create_sliders(names,10)
         sound_amplitude, sampling_rate = helpers.upload_file(file_uploaded)

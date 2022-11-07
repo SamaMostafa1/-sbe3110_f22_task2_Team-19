@@ -60,7 +60,7 @@ def changed_audio(signal_changed_amplitude, sampling_rate):
     st.audio(audio_, format='audio/wav')
 ########################################################################################
 def create_sliders(key,number_sliders):
-    slider_value=np.zeros(number_sliders)
+    slider_value=[0,0,0,0,0,0,0,0,0,0,0]
     columns=np.zeros(number_sliders)
     columns=st.columns(number_sliders)
     for i in range(number_sliders):
@@ -70,7 +70,7 @@ def create_sliders(key,number_sliders):
                                 step=1, 
                                 min_value=0, 
                                 max_value=100,
-                                default_value=0,
+                                default_value=1,
                                 slider_color= 'blue',
                                 track_color='lightgray',
                                 thumb_color = 'blue' ,
