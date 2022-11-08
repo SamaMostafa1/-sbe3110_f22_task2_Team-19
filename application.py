@@ -36,14 +36,10 @@ def app(application_type ):
         time1 = np.linspace(0,1,len(new_signal))
         
         sound_plot = sound_amplitude[:len(new_signal)]
-        
-        df=pd.DataFrame({'time': time1[::30], 'amplitude': sound_plot[:: 30], 'amplitude after processing': new_signal[::30]}, columns=[
+        df = pd.DataFrame({'time': time1[::30], 'amplitude': sound_plot[:: 30], 'amplitude after processing': new_signal[::30]}, columns=[
         'time', 'amplitude','amplitude after processing'])
-        if 'data' not in st.session_state:       
-            st.session_state.data = df
-        
-        lines = helpers.plot_animation(st.session_state.data)
-        print(type(lines))
+ 
+        lines = helpers.plot_animation(df)
         line_plot = st.altair_chart(lines)
         col1,col2 = st.columns(2)
         start_btn = col1.button('Start')
@@ -56,8 +52,7 @@ def app(application_type ):
     
         for i in range(1, N):
             step_df = df.iloc[0:size]
-            st.session_state.data = pd.concat([st.session_state.data, step_df], axis=0)
-            lines = helpers.plot_animation(st.session_state.data)
+            lines = helpers.plot_animation(step_df)
             line_plot = line_plot.altair_chart(lines)
             size = i + burst
             if size >= N:

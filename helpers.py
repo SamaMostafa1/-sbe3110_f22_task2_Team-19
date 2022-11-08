@@ -158,3 +158,12 @@ def plot_animation(df):
     )
     # print(typeOf(figure))
     return figure
+
+
+
+def get_arr(frequency ,lower, upper):
+        arr=[]
+        for freq in range(len(frequency)):
+                if lower< frequency[freq] < upper:
+                    arr.append(frequency[freq])
+        return arr
