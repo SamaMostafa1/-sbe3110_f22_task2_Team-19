@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <style>
+        #submitStartButton {
+            background-color: #008CBA;
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+        }
+        
+        #submitStopButton {
+            background-color: #f44336;
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+        }
+    </style>
+    <script src="./plotly-2.14.0.min.js"></script>
+    <script src="./streamlit-component-lib.js"></script>
+    <!--script src="https://cdn.plot.ly/plotly-2.14.0.min.js"></script-->
+    <script src="./index.js"></script>
+  </head>
+
+  <body>
+    <br/><!-- Just so that JSFiddle's Result label doesn't overlap the Chart -->
+<!-- <div id="chartContainer" style="height: 360px; width: 100%;"></div> -->
+<br/>
+<button id="submitStartButton" type="submit" value="Start">Start Live Chart</button>
+<button id="submitStopButton" type="submit" value="Stop">Stop Live Chart</button>
+    <div id="plot"></div>
+  </body>
+</html>

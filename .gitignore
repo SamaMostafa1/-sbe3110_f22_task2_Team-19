@@ -1,3 +1,13 @@
+
+# JS misc
+node_modules
+.parcel-cache
+build/
+dist/
+
+# IDE stuff
+.vscode
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

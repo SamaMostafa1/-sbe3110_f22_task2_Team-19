@@ -37,7 +37,6 @@ class Equalizer():
                 for freq in range(len(self.frequency)):
                     if dictionary[key][0]< self.frequency[freq] < dictionary[key][1]:
                         self.frequency_temporary_magnitude[freq] = self.frequency_magnitude[freq]*slider_value[k]
-            # print(slider_value[k] , k , key )
             k+=1
 ###############################################################################################
 

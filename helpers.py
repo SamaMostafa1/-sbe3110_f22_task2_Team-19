@@ -9,6 +9,7 @@ import streamlit as st
 import streamlit_vertical_slider as svs
 from matplotlib import pyplot as plt
 import wavio
+import altair as alt
 ################################## Functions defination ################################
 
 
@@ -109,3 +110,32 @@ def create_sliders_dicts(dictionary):
             column_index= column_index+1
             
     return slider_value
+##############################################################################################
+
+def plot_animation(df):
+    brush = alt.selection_interval()
+    chart1 = alt.Chart(df).mark_line().encode(
+            x=alt.X('time', axis=alt.Axis(title='Time')),
+            y=alt.Y('amplitude', axis=alt.Axis(title='Amplitude')),
+        ).properties(
+            width=500,
+            height=300
+        ).add_selection(
+            brush
+        )
+    chart2 = alt.Chart(df).mark_line().encode(
+        x=alt.X('time', axis=alt.Axis(title='Time')),
+        y=alt.Y('amplitude after processing', axis=alt.Axis(title='Amplitude after processing')),
+    ).properties(
+        width=500,
+        height=300
+    ).add_selection(
+        brush
+    )
+    figure =alt.hconcat(
+    chart1,
+    chart2
+    ).resolve_scale(
+        x='shared'
+    )
+    return figure

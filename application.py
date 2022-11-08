@@ -4,8 +4,10 @@ for each application
 
 import streamlit as st
 import helpers
-from equalizer import Equalizer
+from Equalizer import Equalizer
 import data
+import numpy as np
+import pandas as pd
 
 def app(application_type ):
     """for the app chosed by the radio button in main.py"""
@@ -31,4 +33,16 @@ def app(application_type ):
         new_signal = current_equalizer.signal_temporary_amplitude
         helpers.plot_signal(new_signal, sampling_rate)
         helpers.changed_audio(new_signal, sampling_rate)
+        
+        time1 = np.linspace(0,1,len(sound_amplitude))
+        print(len(time1), len(sound_amplitude), len(new_signal))
+        # df = pd.DataFrame({'time': time1[::30], 'amplitude': sound_amplitude[:: 30], 'amplitude after processing': new_signal[::30]}, columns=[
+        # 'time', 'amplitude','amplitude after processing'])
+ 
+        # lines = helpers.plot_animation(df)
+        # line_plot = st.altair_chart(lines)
+        # col1,col2 = st.columns(2)
+        # start_btn = col1.button('Start')
+        # pause_btn = col2.button('Pause')
+        
         
