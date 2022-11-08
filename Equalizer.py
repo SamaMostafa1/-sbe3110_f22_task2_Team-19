@@ -4,7 +4,7 @@ the main class
 import numpy as np
 from scipy.fft import rfft,irfft, rfftfreq
 class Equalizer():
-    ###############################################################################################
+###############################################################################################
     def __init__(self, signal_amplitude, sampling_rate=1):
         # self.frequency_ranges=frequency_ranges
         self.signal_amplitude = signal_amplitude
@@ -26,18 +26,15 @@ class Equalizer():
         # return self.temporary_frequency_magnitude, self.frequency_magnitude
 ###############################################################################################
 
-    def equalize_frequency_range(self, start , end , slider_value,default_value):
-        for freq in range(len(self.frequency)):
-            if slider_value<default_value:
-                self.frequency_temporary_magnitude[freq]= self.frequency_magnitude[freq]*(slider_value)
-            else:
-                self.frequency_temporary_magnitude[freq]= self.frequency_magnitude[freq]/(slider_value)
-            if start< self.frequency[freq] < end:
-                if slider_value<default_value:
-                    self.frequency_temporary_magnitude[freq] = self.frequency_magnitude[freq]/slider_value
-                else:
-                    self.frequency_temporary_magnitude[freq] = self.frequency_magnitude[freq]*slider_value
-                #self.frequency_phase[freq]=self.frequency_phase[freq]/slider_value
+    def equalize_frequency_range(self, dictionary, slider_value):
+        k=0
+        for key in dictionary:
+            if slider_value[k]>-1:
+                for freq in range(len(self.frequency)):
+                    if dictionary[key][0]< self.frequency[freq] < dictionary[key][1]:
+                        self.frequency_temporary_magnitude[freq] = self.frequency_magnitude[freq]*slider_value[k]
+            # print(slider_value[k] , k , key )
+            k+=1
 ###############################################################################################
 
     def inverse_frequency_domain(self):
