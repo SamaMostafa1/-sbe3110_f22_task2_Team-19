@@ -4,7 +4,9 @@ this file contains helper functions..
 ################################## Essential imports ###################################
 import librosa
 import librosa.display
+import numpy as np
 import streamlit as st
+import streamlit_vertical_slider as svs
 from matplotlib import pyplot as plt
 import wavio
 ################################## Functions defination ################################
@@ -40,7 +42,8 @@ def plot_signal(sound_amplitude, sampling_rate):
         sampling_rate (number): the sample rate
     """
     fig, a_x = plt.subplots()
-    librosa.display.waveshow(y=sound_amplitude, sr=sampling_rate,x_axis="time" , ax=a_x )
+    librosa.display.waveshow(
+        y=sound_amplitude, sr=sampling_rate, x_axis="time", ax=a_x)
     st.pyplot(fig)
 ########################################################################################
 
@@ -57,3 +60,52 @@ def changed_audio(signal_changed_amplitude, sampling_rate):
     audio_ = audio_file.read()
     st.audio(audio_, format='audio/wav')
 ########################################################################################
+
+
+def create_sliders(key, number_sliders):
+    slider_value = np.zeros(number_sliders)
+    columns = np.zeros(number_sliders)
+    columns = st.columns(number_sliders)
+    for i in range(number_sliders):
+        with columns[i]:
+            st.markdown(key[i])
+            slider_value[i] = svs.vertical_slider(key=key[i],
+                                                  step=1,
+                                                  min_value=0,
+                                                  max_value=100,
+                                                  default_value=0,
+                                                  slider_color='blue',
+                                                  track_color='lightgray',
+                                                  thumb_color='blue',
+                                                  )
+    return slider_value
+
+def get_dictionary_length(dictionary):
+    length=0
+    for key in dictionary:
+        length+=1
+    return length
+
+
+def create_sliders_dicts(dictionary):
+    length = len(dictionary)
+    length= get_dictionary_length(dictionary)    
+    slider_value = np.zeros(length)
+    columns = np.zeros(length)
+    columns = st.columns(length)
+    column_index=0
+    for i in dictionary:
+        with columns[column_index]:
+            st.write(i)
+            slider_value[column_index] = svs.vertical_slider(key=i,
+                                                  step=1,
+                                                  min_value=0,
+                                                  max_value=100,
+                                                  default_value=0,
+                                                  slider_color='blue',
+                                                  track_color='lightgray',
+                                                  thumb_color='blue'
+                                                  )
+            column_index= column_index+1
+            
+    return slider_value

@@ -30,10 +30,15 @@ class Equalizer():
         # return self.temporary_frequency_magnitude, self.frequency_magnitude
 ###############################################################################################
 
-    def equalize_frequency_range(self, start , end , slider_value):
-        for freq in range(len(self.frequency)):
-            if start< self.frequency[freq] < end:
-                self.frequency_temporary_magnitude[freq] = self.frequency_magnitude[freq]*slider_value
+    def equalize_frequency_range(self, dictionary, slider_value):
+        k=0
+        for key in dictionary:
+            if slider_value[k]>-1:
+                for freq in range(len(self.frequency)):
+                    if dictionary[key][0]< self.frequency[freq] < dictionary[key][1]:
+                        self.frequency_temporary_magnitude[freq] = self.frequency_magnitude[freq]*slider_value[k]
+            # print(slider_value[k] , k , key )
+            k+=1
 ###############################################################################################
 
     def inverse_frequency_domain(self):
