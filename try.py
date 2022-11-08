@@ -111,6 +111,7 @@ import streamlit as st
 from matplotlib import pyplot as plt
 import wavio
 from scipy.fft import rfft,irfft, rfftfreq
+import scipy.stats as stats
 signal_temporary_amplitude=[]
 file_uploaded = st.file_uploader(label="upload",  type=[ 'wav']) 
 if file_uploaded :  
@@ -130,8 +131,9 @@ if file_uploaded :
                     st.pyplot(fig)
                     signal_temporary_amplitude=sound_amplitude
                     st.write("signal temp before any")
-                    st.write(signal_temporary_amplitude)
+                   # st.write(signal_temporary_amplitude)
                     frequency=rfftfreq(len( sound_amplitude),1/ sampling_rate)
+                   # st.write(frequency)
                     fft_parameters= rfft(sound_amplitude)
                     frequency_phase = np.angle(fft_parameters)
                     frequency_magnitude = np.abs(fft_parameters)
@@ -144,10 +146,15 @@ if file_uploaded :
                     #the_plot = st.pyplot(plt)
                     st.pyplot(fig)
                     for i in range(len(frequency)):
-                        temporary_frequency_magnitude[i] =frequency_magnitude[i]*2
-                        if 760<frequency[i]<2800 :
-                            temporary_frequency_magnitude[i] =frequency_magnitude[i]/2
-                            frequency_phase[i]=frequency_phase[i]/2
+                    #temporary_frequency_magnitude[i] =frequency_magnitude[i]*2
+                        #y1=1-stats.norm.pdf(frequency, 690, 200)*500
+                        if frequency_magnitude[i]>350:
+                            st.write(frequency[i])
+                        if 200<frequency[i]<2000 :
+                            temporary_frequency_magnitude[i] =frequency_magnitude[i]/200
+                            if frequency[i]==714.2488026216284:
+                                temporary_frequency_magnitude[i]=frequency_magnitude[i]*0
+                    frequency_phase[i]=frequency_phase[i]/2
                     fig2, ax = plt.subplots(nrows=1, sharex=True, sharey=True)
                     fig2.set_figheight(4)
                     fig2.set_figwidth(16)
@@ -156,9 +163,9 @@ if file_uploaded :
                     st.pyplot(fig2)
                     complex_parameters = np.multiply(
                     temporary_frequency_magnitude, np.exp(np.multiply(1j, frequency_phase)))
-                    signal_temporary_amplitude = irfft(complex_parameters)
-                    st.write("signal temp after irfft")
-                    st.write(signal_temporary_amplitude)
+                    signal_temporary_amplitude =irfft(complex_parameters)
+                   # st.write("signal temp after irfft")
+                   # st.write(signal_temporary_amplitude)
                     fig, ax = plt.subplots()
                     librosa.display.waveshow(signal_temporary_amplitude, sr=sampling_rate, x_axis="time",ax=ax)
                     st.pyplot(fig)
@@ -166,8 +173,8 @@ if file_uploaded :
                     audio_file = open('myfileout.wav', 'rb')
                     audio_ = audio_file.read()
                     st.audio(audio_, format='audio/wav')
-                    st.write(sound_amplitude)
-                    st.write(signal_temporary_amplitude)
+                  #  st.write(sound_amplitude)
+                    #st.write(signal_temporary_amplitude)
        
 #                     #st.audio(myfileout.wav)
                 
