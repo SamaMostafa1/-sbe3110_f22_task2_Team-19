@@ -19,8 +19,6 @@ APP_3 = 'third app'
 APP_4 = 'forth app'
 applications = st.radio('applications' ,(APP_1, APP_2 , APP_3  , APP_4  ),
                         index=0, horizontal=True, label_visibility='collapsed' )
-
-
 if applications == APP_1:
     app(APP_1)
 if applications == APP_2:

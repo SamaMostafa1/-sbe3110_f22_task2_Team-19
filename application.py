@@ -1,7 +1,6 @@
 """
 for each application
 """
-
 import streamlit as st
 import helpers
 from Equalizer import Equalizer
@@ -34,15 +33,36 @@ def app(application_type ):
         helpers.plot_signal(new_signal, sampling_rate)
         helpers.changed_audio(new_signal, sampling_rate)
         
-        time1 = np.linspace(0,1,len(sound_amplitude))
-        print(len(time1), len(sound_amplitude), len(new_signal))
-        # df = pd.DataFrame({'time': time1[::30], 'amplitude': sound_amplitude[:: 30], 'amplitude after processing': new_signal[::30]}, columns=[
-        # 'time', 'amplitude','amplitude after processing'])
- 
-        # lines = helpers.plot_animation(df)
-        # line_plot = st.altair_chart(lines)
-        # col1,col2 = st.columns(2)
-        # start_btn = col1.button('Start')
-        # pause_btn = col2.button('Pause')
+        time1 = np.linspace(0,1,len(new_signal))
+        
+        sound_plot = sound_amplitude[:len(new_signal)]
+        
+        df=pd.DataFrame({'time': time1[::30], 'amplitude': sound_plot[:: 30], 'amplitude after processing': new_signal[::30]}, columns=[
+        'time', 'amplitude','amplitude after processing'])
+        if 'data' not in st.session_state:       
+            st.session_state.data = df
+        
+        lines = helpers.plot_animation(st.session_state.data)
+        print(type(lines))
+        line_plot = st.altair_chart(lines)
+        col1,col2 = st.columns(2)
+        start_btn = col1.button('Start')
+        pause_btn = col2.button('Pause')
+        N=0
+        if start_btn:
+            N = df.shape[0]  # number of elements in the dataframe
+            burst = 1      # number of elements (months) to add to the plot
+            size = burst    # size of the current dataset
+    
+        for i in range(1, N):
+            step_df = df.iloc[0:size]
+            st.session_state.data = pd.concat([st.session_state.data, step_df], axis=0)
+            lines = helpers.plot_animation(st.session_state.data)
+            line_plot = line_plot.altair_chart(lines)
+            size = i + burst
+            if size >= N:
+                size = N - 1
+                if pause_btn:
+                    size = 0
         
         

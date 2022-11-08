@@ -2,7 +2,7 @@
 the main class
 """
 import numpy as np
-
+from scipy.fft import rfft,irfft, rfftfreq
 class Equalizer():
 ###############################################################################################
     def __init__(self, signal_amplitude, sampling_rate=1):
@@ -18,15 +18,11 @@ class Equalizer():
 ###############################################################################################
 
     def to_frequency_domain(self):
-        self.frequency = np.fft.rfftfreq(len(
-            self.signal_amplitude), 1 / self.sampling_rate)[:len(self.signal_amplitude)//2]
-        fft_parameters = np.fft.fft(self.signal_amplitude)[
-            :len(self.signal_amplitude)//2]
+        self.frequency = rfftfreq(len(self.signal_amplitude), 1 / self.sampling_rate)
+        fft_parameters = rfft(self.signal_amplitude)
         self.frequency_phase = np.angle(fft_parameters)
-        self.frequency_magnitude = np.abs(fft_parameters)[
-            :len(self.signal_amplitude)//2]
-        self.frequency_temporary_magnitude = np.abs(
-            fft_parameters)[:len(self.signal_amplitude)//2]
+        self.frequency_magnitude = np.abs(fft_parameters)
+        self.frequency_temporary_magnitude = np.abs(fft_parameters)
         # return self.temporary_frequency_magnitude, self.frequency_magnitude
 ###############################################################################################
 
@@ -43,7 +39,7 @@ class Equalizer():
     def inverse_frequency_domain(self):
         complex_parameters = np.multiply(
         self.frequency_temporary_magnitude, np.exp(np.multiply(1j, self.frequency_phase)))
-        self.signal_temporary_amplitude = np.fft.irfft(complex_parameters)
+        self.signal_temporary_amplitude =irfft(complex_parameters)
         signal_temp=self.signal_temporary_amplitude
         return signal_temp
 ###############################################################################################

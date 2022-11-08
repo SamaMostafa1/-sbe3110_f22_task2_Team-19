@@ -61,6 +61,24 @@ def changed_audio(signal_changed_amplitude, sampling_rate):
     audio_ = audio_file.read()
     st.audio(audio_, format='audio/wav')
 ########################################################################################
+def create_sliders(key,number_sliders):
+    default_value=20
+    slider_value=np.zeros(number_sliders)
+    columns=np.zeros(number_sliders)
+    columns=st.columns(number_sliders)
+    for i in range(number_sliders):
+        with columns[i]:
+            st.markdown(key[i])
+            slider_value[i]=svs.vertical_slider(key=key[i],
+                                step=1, 
+                                min_value=0, 
+                                max_value=100,
+                                default_value=default_value,
+                                slider_color= 'blue',
+                                track_color='lightgray',
+                                thumb_color = 'blue' ,
+                                )
+    return slider_value,default_value
 
 
 def create_sliders(key, number_sliders):
@@ -138,4 +156,5 @@ def plot_animation(df):
     ).resolve_scale(
         x='shared'
     )
+    # print(typeOf(figure))
     return figure
