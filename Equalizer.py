@@ -26,11 +26,17 @@ class Equalizer():
         # return self.temporary_frequency_magnitude, self.frequency_magnitude
 ###############################################################################################
 
-    def equalize_frequency_range(self, start , end , slider_value):
+    def equalize_frequency_range(self, start , end , slider_value,default_value):
         for freq in range(len(self.frequency)):
-            self.frequency_temporary_magnitude[freq]= self.frequency_magnitude[freq]*slider_value
+            if slider_value<default_value:
+                self.frequency_temporary_magnitude[freq]= self.frequency_magnitude[freq]*(slider_value)
+            else:
+                self.frequency_temporary_magnitude[freq]= self.frequency_magnitude[freq]/(slider_value)
             if start< self.frequency[freq] < end:
-                self.frequency_temporary_magnitude[freq] = self.frequency_magnitude[freq]/slider_value
+                if slider_value<default_value:
+                    self.frequency_temporary_magnitude[freq] = self.frequency_magnitude[freq]/slider_value
+                else:
+                    self.frequency_temporary_magnitude[freq] = self.frequency_magnitude[freq]*slider_value
                 #self.frequency_phase[freq]=self.frequency_phase[freq]/slider_value
 ###############################################################################################
 
