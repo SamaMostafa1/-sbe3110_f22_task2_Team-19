@@ -25,7 +25,7 @@ import numpy as np
 from numpy import fft
 from scipy.io import loadmat
 import plotly.express as px
-from test import inverse
+# from test import inverse
 
 
 
@@ -42,8 +42,8 @@ if 'factor' not in st.session_state:
     factor1 = st.sidebar.slider(label="factor1",min_value=0.0,max_value=5.0,step=0.1,value=1.0)
     factor2 = st.sidebar.slider(label="factor2",min_value=0.0,max_value=5.0,step=0.1,value=1.0)
     factor3 = st.sidebar.slider(label="factor3",min_value=0.0,max_value=5.0,step=0.1,value=1.0)
-    factor4 = st.sidebar.slider(label="factor4",min_value=0.0,max_value=5.0,step=0.1,value=1.0)
-    factor5 = st.sidebar.slider(label="factor5",min_value=0.0,max_value=5.0,step=0.1,value=1.0)
+#     factor4 = st.sidebar.slider(label="factor4",min_value=0.0,max_value=5.0,step=0.1,value=1.0)
+#     factor5 = st.sidebar.slider(label="factor5",min_value=0.0,max_value=5.0,step=0.1,value=1.0)
     
 # ####################################
 
@@ -80,15 +80,15 @@ if uploaded_file is not None:
        for i in range(len(fft_frequencies)):
               for j in range(len(fft_magnitudes)):
                      if i == j and fft_frequencies[i]==0:
-                            fft_magnitudes[j:j+10] = fft_magnitudes[j]*factor1
-                     if i == j and 10>fft_frequencies[i]>0:
-                            fft_magnitudes[j:j+10] = fft_magnitudes[j]*factor2   
-                     if i == j and 90>fft_frequencies[i]>110:
-                            fft_magnitudes[j:j+10] = fft_magnitudes[j]*factor3
-                     if i == j and fft_frequencies[i]==-0.000967697097744361:
-                            fft_magnitudes[j:j+10] = fft_magnitudes[j]*factor4
-                     if i == j and fft_frequencies[i]==-6.265664661654136e-05:
-                            fft_magnitudes[j:j+10] = fft_magnitudes[j]*factor5
+                            fft_magnitudes[j] = fft_magnitudes[j]*factor1
+                     if i == j and 80<fft_frequencies[i]<130:
+                            fft_magnitudes[j] = fft_magnitudes[j]*factor2   
+                     if i == j and fft_frequencies[i]>130:
+                            fft_magnitudes[j] = fft_magnitudes[j]*factor3
+                     # if i == j and fft_frequencies[i]==-0.000967697097744361:
+                     #        fft_magnitudes[j:j+10] = fft_magnitudes[j]*factor4
+                     # if i == j and fft_frequencies[i]==-6.265664661654136e-05:
+                     #        fft_magnitudes[j:j+10] = fft_magnitudes[j]*factor5
                      
 
 
