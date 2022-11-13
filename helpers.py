@@ -1,17 +1,27 @@
 """
 this file contains helper functions..
 """
+import time
+
+import altair as alt
 ################################## Essential imports ###################################
 import librosa
 import librosa.display
 import numpy as np
+import pandas as pd
 import streamlit as st
 import streamlit_vertical_slider as svs
-from matplotlib import pyplot as plt
 import wavio
-import altair as alt
+from matplotlib import pyplot as plt
+
 ################################## Functions defination ################################
 
+if 'start' not in st.session_state:
+    st.session_state['start']=0
+if 'size1' not in st.session_state:
+    st.session_state['size1']=0
+if 'flag' not in st.session_state:
+    st.session_state['flag']=1
 
 def upload_file(file_uploaded):
     """_summary_
@@ -81,34 +91,8 @@ def create_sliders(key,number_sliders):
     return slider_value,default_value
 
 
-def create_sliders(key, number_sliders):
-    slider_value = np.zeros(number_sliders)
-    columns = np.zeros(number_sliders)
-    columns = st.columns(number_sliders)
-    for i in range(number_sliders):
-        with columns[i]:
-            st.markdown(key[i])
-            slider_value[i] = svs.vertical_slider(key=key[i],
-                                                  step=1,
-                                                  min_value=0,
-                                                  max_value=100,
-                                                  default_value=0,
-                                                  slider_color='blue',
-                                                  track_color='lightgray',
-                                                  thumb_color='blue',
-                                                  )
-    return slider_value
-
-def get_dictionary_length(dictionary):
-    length=0
-    for key in dictionary:
-        length+=1
-    return length
-
-
 def create_sliders_dicts(dictionary):
     length = len(dictionary)
-    length= get_dictionary_length(dictionary)    
     slider_value = np.zeros(length)
     columns = np.zeros(length)
     columns = st.columns(length)
@@ -119,8 +103,8 @@ def create_sliders_dicts(dictionary):
             slider_value[column_index] = svs.vertical_slider(key=i,
                                                   step=1,
                                                   min_value=0,
-                                                  max_value=100,
-                                                  default_value=0,
+                                                  max_value=2,
+                                                  default_value=1,
                                                   slider_color='blue',
                                                   track_color='lightgray',
                                                   thumb_color='blue'
@@ -129,41 +113,100 @@ def create_sliders_dicts(dictionary):
             
     return slider_value
 ##############################################################################################
-
 def plot_animation(df):
     brush = alt.selection_interval()
     chart1 = alt.Chart(df).mark_line().encode(
             x=alt.X('time', axis=alt.Axis(title='Time')),
-            y=alt.Y('amplitude', axis=alt.Axis(title='Amplitude')),
+            # y=alt.Y('amplitude', axis=alt.Axis(title='Amplitude')),
         ).properties(
             width=500,
             height=300
         ).add_selection(
-            brush
-        )
-    chart2 = alt.Chart(df).mark_line().encode(
-        x=alt.X('time', axis=alt.Axis(title='Time')),
-        y=alt.Y('amplitude after processing', axis=alt.Axis(title='Amplitude after processing')),
-    ).properties(
-        width=500,
-        height=300
-    ).add_selection(
-        brush
-    )
-    figure =alt.hconcat(
-    chart1,
-    chart2
-    ).resolve_scale(
-        x='shared'
-    )
-    # print(typeOf(figure))
+            brush).interactive()
+    
+    figure = chart1.encode(
+                  y=alt.Y('amplitude',axis=alt.Axis(title='Amplitude')))| chart1.encode(
+                  y=alt.Y('amplitude after processing',axis=alt.Axis(title='Amplitude after'))).add_selection(
+            brush)
+
     return figure
 
 
+def plotShow(data, idata,start_btn,pause_btn,resume_btn,sr):
 
-def get_arr(frequency ,lower, upper):
-        arr=[]
-        for freq in range(len(frequency)):
-                if lower< frequency[freq] < upper:
-                    arr.append(frequency[freq])
-        return arr
+    time1 = len(data)/(sr)
+    if time1>1:
+        time1 = int(time1)
+    time1 = np.linspace(0,time1,len(data))   
+    df = pd.DataFrame({'time': time1[::300], 
+                        'amplitude': data[:: 300],
+                        'amplitude after processing': idata[::300]}, columns=[
+                        'time', 'amplitude','amplitude after processing'])
+    N = df.shape[0]  # number of elements in the dataframe
+    burst = 10      # number of elements (months) to add to the plot
+    size = burst 
+    
+    step_df = df.iloc[0:st.session_state.size1]
+    if st.session_state.size1 ==0:
+        step_df = df.iloc[0:N]
+
+    lines = plot_animation(step_df)
+    line_plot = st.altair_chart(lines)
+    line_plot= line_plot.altair_chart(lines)
+
+    # lines = plot_animation(df)
+    # line_plot = st.altair_chart(lines)
+    N = df.shape[0]  # number of elements in the dataframe
+    burst = 10      # number of elements (months) to add to the plot
+    size = burst    #   size of the current dataset
+    if start_btn:
+        st.session_state.flag = 1
+        for i in range(1, N):
+            st.session_state.start=i
+            step_df = df.iloc[0:size]
+            lines = plot_animation(step_df)
+            line_plot = line_plot.altair_chart(lines)
+            size = i + burst 
+            st.session_state.size1 = size
+            time.sleep(.1)
+
+    elif resume_btn: 
+            st.session_state.flag = 1
+            for i in range( st.session_state.start,N):
+                st.session_state.start =i 
+                step_df = df.iloc[0:size]
+                lines = plot_animation(step_df)
+                line_plot = line_plot.altair_chart(lines)
+                st.session_state.size1 = size
+                size = i + burst
+                time.sleep(.000001)
+
+    elif pause_btn:
+            st.session_state.flag =0
+            step_df = df.iloc[0:st.session_state.size1]
+            lines = plot_animation(step_df)
+            line_plot= line_plot.altair_chart(lines)
+
+
+
+    if st.session_state.flag == 1:
+        for i in range( st.session_state.start,N):
+                st.session_state.start =i 
+                step_df = df.iloc[0:size]
+                lines = plot_animation(step_df)
+                line_plot = line_plot.altair_chart(lines)
+                st.session_state.size1 = size
+                size = i + burst
+                time.sleep(.000001)
+                                
+def get_index(specific_frequency ,sample_rate ,signal):
+    return int((specific_frequency/(sample_rate))*len(signal))  # (freq(hz)/fmax)*len(signal)  => where is 50 hz in fft
+
+def hanning (arr, range_length):
+    result= []
+    result= result[:len(arr)]
+    for i in range(len(arr)):
+        result[i]= np.hanning(range_length)[i]* arr[i]
+        
+    return result
+

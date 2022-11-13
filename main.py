@@ -13,13 +13,14 @@ st.set_page_config(
     layout="wide",
 )
 
-APP_1 = 'first app'
-APP_2= 'second app'
-APP_3 = 'third app'
+APP_1 = 'General Signal'
+APP_2= 'Vowels'
+APP_3 = 'Music Instruments'
 APP_4 = 'forth app'
 applications = st.radio('applications' ,(APP_1, APP_2 , APP_3  , APP_4  ),
                         index=0, horizontal=True, label_visibility='collapsed' )
 if applications == APP_1:
+    application_type= APP_1
     app(APP_1)
 if applications == APP_2:
     app(APP_2)
