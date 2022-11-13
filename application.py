@@ -9,7 +9,7 @@ import streamlit as st
 
 import data
 import helpers
-from Equalizer import Equalizer
+from equalizer import Equalizer
 
 
 def app(application_type ):
@@ -28,19 +28,13 @@ def app(application_type ):
             dictionary= data.GENERAL
         value = helpers.create_sliders_dicts(dictionary)
         sound_amplitude, sampling_rate = helpers.upload_file(file_uploaded)
-        helpers.plot_signal(sound_amplitude, sampling_rate)
+        # helpers.plot_signal(sound_amplitude, sampling_rate)
         current_equalizer = Equalizer(sound_amplitude, sampling_rate)
         current_equalizer.to_frequency_domain()
-        
-        st.write(helpers.get_index(660, sampling_rate , sound_amplitude))
-        st.write(helpers.get_index(1720, sampling_rate , sound_amplitude))
-        st.write(helpers.get_index(2410, sampling_rate , sound_amplitude))
-      
-        # current_equalizer.equalize_frequency_range(1500,dictionary, value )
+        current_equalizer.equalize_frequency_range(dictionary, value )
     
         current_equalizer.inverse_frequency_domain()
         new_signal = current_equalizer.signal_temporary_amplitude
-        helpers.changed_audio(new_signal, sampling_rate)
         
         sound_plot = sound_amplitude[:len(new_signal)]
         
@@ -48,3 +42,5 @@ def app(application_type ):
         pause_btn= st.button("pause plotting")
         resume_btn= st.button("resume plotting")
         helpers.plotShow(sound_plot , new_signal,start_btn,pause_btn,resume_btn ,sampling_rate)
+        helpers.changed_audio(new_signal, sampling_rate)
+        

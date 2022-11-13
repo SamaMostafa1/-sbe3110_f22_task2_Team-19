@@ -16,12 +16,6 @@ from matplotlib import pyplot as plt
 
 ################################## Functions defination ################################
 
-if 'start' not in st.session_state:
-    st.session_state['start']=0
-if 'size1' not in st.session_state:
-    st.session_state['size1']=0
-if 'flag' not in st.session_state:
-    st.session_state['flag']=1
 
 def upload_file(file_uploaded):
     """_summary_
@@ -103,8 +97,8 @@ def create_sliders_dicts(dictionary):
             slider_value[column_index] = svs.vertical_slider(key=i,
                                                   step=1,
                                                   min_value=0,
-                                                  max_value=2,
-                                                  default_value=1,
+                                                  max_value=100,
+                                                  default_value=50,
                                                   slider_color='blue',
                                                   track_color='lightgray',
                                                   thumb_color='blue'
@@ -133,6 +127,13 @@ def plot_animation(df):
 
 
 def plotShow(data, idata,start_btn,pause_btn,resume_btn,sr):
+
+    if 'start' not in st.session_state:
+        st.session_state['start']=0
+    if 'size1' not in st.session_state:
+        st.session_state['size1']=0
+    if 'flag' not in st.session_state:
+        st.session_state['flag']=1
 
     time1 = len(data)/(sr)
     if time1>1:
@@ -200,7 +201,7 @@ def plotShow(data, idata,start_btn,pause_btn,resume_btn,sr):
                 time.sleep(.000001)
                                 
 def get_index(specific_frequency ,sample_rate ,signal):
-    return int((specific_frequency/(sample_rate))*len(signal))  # (freq(hz)/fmax)*len(signal)  => where is 50 hz in fft
+    return int((specific_frequency/(sample_rate/2))*len(signal))  # (freq(hz)/fmax)*len(signal)  => where is 50 hz in fft
 
 def hanning (arr, range_length):
     result= []
