@@ -50,5 +50,3 @@ def app(application_type):
             with colu2:
                 st.write("Output Signal")
                 app1.action(final_file)
-
-
