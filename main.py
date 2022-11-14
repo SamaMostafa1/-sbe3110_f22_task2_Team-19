@@ -1,10 +1,7 @@
-"""
-this file contains the ui & it is where the the app starts the run ..
-"""
+""" this file contains the ui & it is where the the app starts the run .. """
 import streamlit as st  # 🎈 data web app development
 from application import app
 # import plotly.graph_objects as plot
-
 
 # general styling and tab name
 st.set_page_config(page_title="Equalizer Studio",page_icon="🎚️",layout="wide")
