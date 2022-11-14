@@ -31,10 +31,10 @@ def upload_file(file_uploaded):
         if file_details['FileType'] == 'audio/wav':
             with open('Input/FileName', 'wb') as file:
                 file.write(file_uploaded.getbuffer())
-                st.subheader("Input audio:")
+                st.sidebar.subheader("Input audio :")
                 audio_file = open('Input/FileName', 'rb')
                 audio_bytes = audio_file.read()
-                st.audio(audio_bytes, format='audio/wav')
+                st.sidebar.audio(audio_bytes, format='audio/wav')
                 sound_amplitude, sampling_rate = librosa.load('Input/FileName')
                 return sound_amplitude, sampling_rate
 ########################################################################################
@@ -62,8 +62,9 @@ def changed_audio(signal_changed_amplitude, sampling_rate):
     wavio.write("myfileout.wav", signal_changed_amplitude,
                 sampling_rate, sampwidth=1)
     audio_file = open('myfileout.wav', 'rb')
+    st.sidebar.subheader("Output audio :")
     audio_ = audio_file.read()
-    st.audio(audio_, format='audio/wav')
+    st.sidebar.audio(audio_, format='audio/wav')
 ########################################################################################
 def create_sliders(key,number_sliders):
     default_value=20
@@ -84,17 +85,17 @@ def create_sliders(key,number_sliders):
                                 )
     return slider_value,default_value
 
-
 def create_sliders_dicts(dictionary):
     length = len(dictionary)
     slider_value = np.zeros(length)
     columns = np.zeros(length)
     columns = st.columns(length)
     column_index=0
+    # with st.expander("Slider :"):
     for i in dictionary:
         with columns[column_index]:
-            st.write(i)
-            slider_value[column_index] = svs.vertical_slider(key=i,
+                st.write(i)
+                slider_value[column_index] = svs.vertical_slider(key=i,
                                                   step=1,
                                                   min_value=0,
                                                   max_value=100,
@@ -103,7 +104,7 @@ def create_sliders_dicts(dictionary):
                                                   track_color='lightgray',
                                                   thumb_color='blue'
                                                   )
-            column_index= column_index+1
+        column_index= column_index+1
             
     return slider_value
 ##############################################################################################
@@ -211,3 +212,13 @@ def hanning (arr, range_length):
         
     return result
 
+def plot_transformation(y):
+    D = librosa.stft(y)  # STFT of y
+    S_db = librosa.amplitude_to_db(np.abs(D), ref=np.max)
+    fig, ax = plt.subplots()
+    img = librosa.display.specshow(S_db, x_axis='time', y_axis='linear', ax=ax)
+    ax.set(title="Spectrogram")
+    plt.xlabel("Time (s)")
+    plt.ylabel("Frequency (Hz)")
+    fig.colorbar(img, ax=ax, format="%+2.f dB")
+    return plt.gcf()

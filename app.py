@@ -24,7 +24,7 @@ def plot_wave(y, sr):
     plt.ylabel("Amplitude")
     return plt.gcf()
 
-def plot_transformation(y, transformation_name):
+def plot_transformation(y):
     D = librosa.stft(y)  # STFT of y
     S_db = librosa.amplitude_to_db(np.abs(D), ref=np.max)
     fig, ax = plt.subplots()
