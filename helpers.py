@@ -13,7 +13,6 @@ import streamlit as st
 import streamlit_vertical_slider as svs
 import wavio
 from matplotlib import pyplot as plt
-import pydub
 
 ################################## Functions defination ################################
 
@@ -59,6 +58,8 @@ def changed_audio(signal_changed_amplitude, sampling_rate):
     Args:
         signal_changed_amplitude (list): the signal amplitude _after processing_
         sampling_rate (number): sample rate
+    Returns:
+        audio_file (wav): the modified file
     """
     wavio.write("myfileout.wav", signal_changed_amplitude,
                 sampling_rate, sampwidth=1)
