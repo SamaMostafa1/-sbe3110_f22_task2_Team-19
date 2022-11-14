@@ -13,6 +13,7 @@ import streamlit as st
 import streamlit_vertical_slider as svs
 import wavio
 from matplotlib import pyplot as plt
+import pydub
 
 ################################## Functions defination ################################
 
@@ -64,7 +65,8 @@ def changed_audio(signal_changed_amplitude, sampling_rate):
     audio_file = open('myfileout.wav', 'rb')
     st.sidebar.subheader("Output audio :")
     audio_ = audio_file.read()
-    st.sidebar.audio(audio_, format='audio/wav')
+    final = st.sidebar.audio(audio_, format='audio/wav')
+    return audio_file
 ########################################################################################
 def create_sliders(key,number_sliders):
     default_value=20
@@ -211,14 +213,3 @@ def hanning (arr, range_length):
         result[i]= np.hanning(range_length)[i]* arr[i]
         
     return result
-
-def plot_transformation(y):
-    D = librosa.stft(y)  # STFT of y
-    S_db = librosa.amplitude_to_db(np.abs(D), ref=np.max)
-    fig, ax = plt.subplots()
-    img = librosa.display.specshow(S_db, x_axis='time', y_axis='linear', ax=ax)
-    ax.set(title="Spectrogram")
-    plt.xlabel("Time (s)")
-    plt.ylabel("Frequency (Hz)")
-    fig.colorbar(img, ax=ax, format="%+2.f dB")
-    return plt.gcf()
