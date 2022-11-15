@@ -13,7 +13,7 @@ Yehia Said | 2
 1. **_Clone the repository_**
 
 ```sh
-$ git clone https://github.com/YehiaSAhmed/DSP_Task1_Team28 https://github.com/SamaMostafa1/-sbe3110_f22_task2_Team-19
+$ git clone https://github.com/SamaMostafa1/-sbe3110_f22_task2_Team-19
 ```
 2. **_Navigate to repository directory_**
 ```sh
