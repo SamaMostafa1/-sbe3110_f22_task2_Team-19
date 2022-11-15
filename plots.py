@@ -7,8 +7,6 @@ import pydub
 import streamlit as st
 import pandas as pd
 from matplotlib import pyplot as plt
-
-
 @st.cache
 def handle_uploaded_audio_file(uploaded_file):
     """_summary_
@@ -59,7 +57,7 @@ def plot_animation(df):
         # y=alt.Y('amplitude', axis=alt.Axis(title='Amplitude')),
     ).properties(
         width=300,
-        height=300
+        height=200
     ).add_selection(
         brush).interactive()
 
