@@ -3,7 +3,7 @@ import streamlit as st
 
 import data
 import helpers
-from equalizer import Equalizer
+from Equalizer import Equalizer
 from plots import show_dynamic_plot, show_spectrogram
 
 
