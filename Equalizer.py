@@ -59,10 +59,13 @@ class Equalizer():
         for slider_index, (key, value) in enumerate(dictionary.items()):
             for freq_range in value:
                 if slider_value[slider_index] > -1:
-                    index = np.where((self.frequency > freq_range[0]) & (
-                        self.frequency < freq_range[1]))
-                    hanning_window = ((slider_value[slider_index])*np.hanning(freq_range[1]
-                                                                              - freq_range[0]))
-                    for i, itr in zip(index, hanning_window):
-                        self.frequency_temporary_magnitude[i] = self.frequency_magnitude[i]*itr
+                    if slider_value[slider_index]>100:
+                        hanning_window=slider_value[slider_index]/100
+                    else:
+                        index = np.where((self.frequency > freq_range[0]) & (
+                            self.frequency < freq_range[1]))
+                        hanning_window = ((slider_value[slider_index])*np.hanning(freq_range[1]
+                                                                                - freq_range[0]))
+                        for i, itr in zip(index, hanning_window):
+                            self.frequency_temporary_magnitude[i] = self.frequency_magnitude[i]*itr
  ##############################################################################################

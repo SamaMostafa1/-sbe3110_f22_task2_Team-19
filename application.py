@@ -8,7 +8,6 @@ from plots import show_dynamic_plot, show_spectrogram
 
 
 def app(application_type):
-    # global dictionary
     """for the app chosed by the radio button in main.py"""
     if 'flag' not in st.session_state:
         st.session_state['flag'] = False
@@ -24,8 +23,14 @@ def app(application_type):
             dictionary = data.INSTRUMENT
         elif application_type == 'General Signal':
             dictionary = data.GENERAL
-
-        value = helpers.create_sliders_dicts(dictionary)
+        signal_view = st.radio(
+            "Modes :", ('dynamic wave', 'spectrogram'), index=0, horizontal=True,
+            label_visibility='collapsed')
+        columns1 = [1, 1, 1]
+        col1, col2, col3 = st.sidebar.columns(columns1)
+        columns2 = [1, 1]
+        colu1, colu2 = st.columns(columns2)
+        
         sound_amplitude, sampling_rate = helpers.upload_file(file_uploaded)
         current_equalizer = Equalizer(sound_amplitude, sampling_rate)
         current_equalizer.to_frequency_domain()
@@ -33,18 +38,13 @@ def app(application_type):
             dictionary = helpers.general_signal_dictionary(
                 current_equalizer.frequency, dictionary)
             st.session_state.flag = True
-
+        value = helpers.create_sliders_dicts(dictionary)
         current_equalizer.equalize_frequency_range(dictionary, value)
         current_equalizer.inverse_frequency_domain()
         new_signal = current_equalizer.signal_temporary_amplitude
         sound_plot = sound_amplitude[:len(new_signal)]
 
-        signal_view = st.radio(
-            "Modes :", ('dynamic wave', 'spectrogram'), index=0, horizontal=True,
-            label_visibility='collapsed')
-
-        columns1 = [1, 1, 1]
-        col1, col2, col3 = st.sidebar.columns(columns1)
+        
         with col1:
             start_btn = st.button("Start")
         with col2:
@@ -59,8 +59,7 @@ def app(application_type):
                               pause_btn, resume_btn, sampling_rate)
 
         if signal_view == 'spectrogram':
-            columns2 = [1, 1]
-            colu1, colu2 = st.columns(columns2)
+        
             with colu1:
                 st.write("Original Signal")
                 show_spectrogram(file_uploaded)

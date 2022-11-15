@@ -96,11 +96,13 @@ def show_dynamic_plot(data, idata, start_btn, pause_btn, resume_btn, sr):
         st.session_state['size1'] = 0
     if 'flag' not in st.session_state:
         st.session_state['flag'] = 1
+    if 'time_start' not in st.session_state:
+        st.session_state['time_start']=0
 
-    time1 = len(data)/(sr)
-    if time1 > 1:
-        time1 = int(time1)
-    time1 = np.linspace(0, time1, len(data))
+    max_time = len(data)/(sr)
+    if max_time > 1:
+        max_time = int(max_time)
+    time1 = np.linspace(0, max_time, len(data))
     df = pd.DataFrame({'time': time1[::300],
                        'amplitude': data[:: 300],
                        'amplitude after processing': idata[::300]}, columns=[
@@ -131,7 +133,7 @@ def show_dynamic_plot(data, idata, start_btn, pause_btn, resume_btn, sr):
             line_plot = line_plot.altair_chart(lines)
             size = i + burst
             st.session_state.size1 = size
-            time.sleep(.1)
+            time.sleep(.000001)
 
     elif resume_btn:
         st.session_state.flag = 1
