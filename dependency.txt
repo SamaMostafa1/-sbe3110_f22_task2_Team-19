@@ -1,8 +1,0 @@
-streamlit
-librosa
-librosa.display
-numpy
-streamlit_vertical_slider
-wavio
-matplotlib
-soundfile
