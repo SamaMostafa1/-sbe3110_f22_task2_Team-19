@@ -30,22 +30,29 @@ def app(application_type):
         current_equalizer.inverse_frequency_domain()
         new_signal = current_equalizer.signal_temporary_amplitude
         sound_plot = sound_amplitude[:len(new_signal)]
+        
+        
+        
+        signal_view = st.radio(
+            "Modes :", ('dynamic wave' , 'spectrogram'), index=0, horizontal=True , label_visibility='collapsed')
 
-        with st.expander("Waveform"):
-            columns1 = [1, 1, 1]
-            col1, col2, col3 = st.columns(columns1)
-            with col1:
-                start_btn = st.button("Start")
-            with col2:
-                pause_btn = st.button("Pause")
-            with col3:
-                resume_btn = st.button("Resume")
+    
+        columns1 = [1, 1, 1]
+        col1, col2, col3 = st.sidebar.columns(columns1)
+        with col1:
+            start_btn = st.button("Start")
+        with col2:
+            pause_btn = st.button("Pause")
+        with col3:
+            resume_btn = st.button("Resume")
 
-            final_file = helpers.changed_audio(new_signal, sampling_rate)
+        final_file = helpers.changed_audio(new_signal, sampling_rate)
+        
+        if signal_view == 'dynamic wave':
             show_dynamic_plot(sound_plot, new_signal, start_btn,
-                             pause_btn, resume_btn, sampling_rate)
+                            pause_btn, resume_btn, sampling_rate)
 
-        with st.expander("Spectrogram"):
+        if signal_view== 'spectrogram':
             columns2 = [1, 1]
             colu1, colu2 = st.columns(columns2)
             with colu1:

@@ -75,7 +75,7 @@ def plot_animation(df):
         x=alt.X('time', axis=alt.Axis(title='Time')),
         # y=alt.Y('amplitude', axis=alt.Axis(title='Amplitude')),
     ).properties(
-        width=500,
+        width=300,
         height=300
     ).add_selection(
         brush).interactive()
