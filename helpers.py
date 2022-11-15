@@ -1,6 +1,8 @@
 """
 this file contains helper functions..
 """
+import math
+
 ################################## Essential imports ###################################
 import librosa
 import librosa.display
@@ -65,26 +67,24 @@ def changed_audio(signal_changed_amplitude, sampling_rate):
     st.sidebar.audio(audio_, format='audio/wav')
     return audio_file
 ########################################################################################
+def general_signal_dictionary (frequency ,dictionary ) :
+    """_summary_
 
+    Args:
+        frequency (_type_): _description_
+        dictionary (_type_): _description_
 
-# def create_sliders(key, number_sliders):
-#     default_value = 20
-#     slider_value = np.zeros(number_sliders)
-#     columns = np.zeros(number_sliders)
-#     columns = st.columns(number_sliders)
-#     for i in range(number_sliders):
-#         with columns[i]:
-#             st.markdown(key[i])
-#             slider_value[i] = svs.vertical_slider(key=key[i],
-#                                                   step=1,
-#                                                   min_value=0,
-#                                                   max_value=100,
-#                                                   default_value=default_value,
-#                                                   slider_color='blue',
-#                                                   track_color='lightgray',
-#                                                   thumb_color='blue',
-#                                                   )
-#     return slider_value, default_value
+    Returns:
+        _type_: _description_
+    """
+    bin_max_frequency_value = math.ceil(len(frequency)/11)
+    i=0
+    for key in dictionary:
+        dictionary[key][0].append(frequency[i*bin_max_frequency_value])
+        dictionary[key][0].append(frequency[(i+1)*bin_max_frequency_value])
+        print(dictionary)
+        i+=1
+    return dictionary
 
 
 def create_sliders_dicts(dictionary):
