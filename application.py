@@ -30,7 +30,7 @@ def app(application_type):
         col1, col2, col3 = st.sidebar.columns(columns1)
         columns2 = [1, 1]
         colu1, colu2 = st.columns(columns2)
-        
+
         sound_amplitude, sampling_rate = helpers.upload_file(file_uploaded)
         current_equalizer = Equalizer(sound_amplitude, sampling_rate)
         current_equalizer.to_frequency_domain()
@@ -44,7 +44,6 @@ def app(application_type):
         new_signal = current_equalizer.signal_temporary_amplitude
         sound_plot = sound_amplitude[:len(new_signal)]
 
-        
         with col1:
             start_btn = st.button("Start")
         with col2:
@@ -59,7 +58,7 @@ def app(application_type):
                               pause_btn, resume_btn, sampling_rate)
 
         if signal_view == 'spectrogram':
-        
+
             with colu1:
                 st.write("Original Signal")
                 show_spectrogram(file_uploaded)
