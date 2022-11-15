@@ -11,6 +11,12 @@ from matplotlib import pyplot as plt
 
 @st.cache
 def handle_uploaded_audio_file(uploaded_file):
+    """_summary_
+    Args:
+        uploaded_file (_type_):a wav file the user wants to process
+    Returns:
+        the wav file as array 
+    """
     a = pydub.AudioSegment.from_file(
         file=uploaded_file, format=uploaded_file.name.split(".")[-1])
     channel_sounds = a.split_to_mono()
@@ -19,18 +25,14 @@ def handle_uploaded_audio_file(uploaded_file):
     fp_arr /= np.iinfo(samples[0].typecode).max
     return fp_arr[:, 0], a.frame_rate
 
-
-def plot_wave(y, sr):
-    fig, ax = plt.subplots()
-    ax.set(title="Waveform")
-    librosa.display.waveshow(y, sr=sr, ax=ax)
-    plt.xlabel("Time (s)")
-    plt.ylabel("Amplitude")
-    return plt.gcf()
-
-
-def plot_transformation(y):
-    D = librosa.stft(y)  # STFT of y
+def plot_transformation(file):
+    """_summary_
+    Args:
+        file (_type_):a wav file the user wants to process
+    Returns:
+        the spectrogram of the file as figure
+    """
+    D = librosa.stft(file)  # STFT of y
     S_db = librosa.amplitude_to_db(np.abs(D), ref=np.max)
     fig, ax = plt.subplots()
     img = librosa.display.specshow(S_db, x_axis='time', y_axis='linear', ax=ax)
@@ -38,34 +40,15 @@ def plot_transformation(y):
     plt.xlabel("Time (s)")
     plt.ylabel("Frequency (Hz)")
     fig.colorbar(img, ax=ax, format="%+2.f dB")
-    return plt.gcf()
-
-
-def plot_audio_transformations(y):
-    st.pyplot(plot_transformation(y))
-
+    return st.pyplot(plt.gcf())
 
 def show_spectrogram(file):
+    """
+    check whether there is file uploaded or not
+    """
     if file is not None:
         y, sr = handle_uploaded_audio_file(file)
-    plot_audio_transformations(y)
-
-
-def fequency_domain(signal, sr):
-    freq = np.fft.fft(signal)
-    freq_mag = np.absolute(freq)
-    f = np.linspace(0, sr, len(freq_mag))
-    fig, ax = plt.subplots(nrows=1, sharex=True, sharey=True)
-    ax.set(title="Signal Spectrum")
-    ax.plot(f, freq_mag)
-    plt.xlabel("Frequency (Hz)")
-    plt.ylabel("Amplitude")
-    st.pyplot(fig)
-
-
-hide_st_style = """ <style> #MainMenu {visibility: hidden;} footer {visibility: hidden;} header {visibility: hidden;} </style>"""
-st.markdown(hide_st_style, unsafe_allow_html=True)
-
+    plot_transformation(y)
 
 ##################################################animated plots###############################################
 
