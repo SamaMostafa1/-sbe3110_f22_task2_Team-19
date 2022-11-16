@@ -69,7 +69,7 @@ def plot_animation(df):
     return figure
 
 
-def show_dynamic_plot(data, idata, start_btn, pause_btn, resume_btn, sr):
+def show_dynamic_plot(data, idata, start_btn, pause_btn, resume_btn, sr , application_type):
 
     if 'start' not in st.session_state:
         st.session_state['start'] = 0
@@ -84,10 +84,16 @@ def show_dynamic_plot(data, idata, start_btn, pause_btn, resume_btn, sr):
     if max_time > 1:
         max_time = int(max_time)
     time1 = np.linspace(0, max_time, len(data))
-    df = pd.DataFrame({'time': time1[::300],
-                       'amplitude': data[:: 300],
-                       'amplitude after processing': idata[::300]}, columns=[
+    if application_type=='ECG':
+        df = pd.DataFrame({'time': time1[::30],
+                       'amplitude': data[:: 30],
+                       'amplitude after processing': idata[::30]}, columns=[
         'time', 'amplitude', 'amplitude after processing'])
+    else:    
+        df = pd.DataFrame({'time': time1[::300],
+                        'amplitude': data[:: 300],
+                        'amplitude after processing': idata[::300]}, columns=[
+            'time', 'amplitude', 'amplitude after processing'])
     N = df.shape[0]  # number of elements in the dataframe
     burst = 10      # number of elements (months) to add to the plot
     size = burst
@@ -142,7 +148,6 @@ def show_dynamic_plot(data, idata, start_btn, pause_btn, resume_btn, sr):
             st.session_state.size1 = size
             size = i + burst
             time.sleep(.000001)
-
 
 
 

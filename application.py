@@ -5,6 +5,7 @@ import data
 import helpers
 from equalizer import Equalizer
 from plots import show_dynamic_plot, show_spectrogram
+import librosa
 def app(application_type):
     """for the app chosed by the radio button in main.py"""
         
@@ -17,7 +18,7 @@ def app(application_type):
     # with open("style.css")as css:
     #     st.markdown(f"<style>{css.read() }</style>", unsafe_allow_html=True)
     file_uploaded = st.sidebar.file_uploader(label="upload",
-                                            type=['wav'], label_visibility='collapsed')
+                                            type=['wav','csv'], label_visibility='collapsed')
     if file_uploaded:
         if application_type == 'Vowels':
             dictionary = data.VOWEL
@@ -25,6 +26,10 @@ def app(application_type):
             dictionary = data.INSTRUMENT
         elif application_type == 'General Signal':
             dictionary = data.GENERAL
+        elif application_type=='ECG':
+            dictionary= data.ECG
+        elif application_type=='Change voice':
+            dictionary= data.Change_voice
         signal_view = st.radio(
             "Modes :", ('dynamic wave', 'spectrogram'), index=0, horizontal=True,
             label_visibility='collapsed')
@@ -33,18 +38,24 @@ def app(application_type):
         columns2 = [1, 1]
         colu1, colu2 = st.columns(columns2)
         col1, col2,col3 = st.columns(columns1)
-        sound_amplitude, sampling_rate = helpers.upload_file(file_uploaded)
-        current_equalizer = Equalizer(sound_amplitude, sampling_rate)
-        current_equalizer.to_frequency_domain()
-        if application_type == 'General Signal' and st.session_state.flag is False:
-            dictionary = helpers.general_signal_dictionary(
-                current_equalizer.frequency, dictionary)
-            st.session_state.flag = True
-        value = helpers.create_sliders_dicts(dictionary)
-        current_equalizer.equalize_frequency_range(dictionary, value)
-        current_equalizer.inverse_frequency_domain()
-        new_signal = current_equalizer.signal_temporary_amplitude
-        sound_plot = sound_amplitude[:len(new_signal)]
+        amplitude, sampling_rate = helpers.upload_file(file_uploaded)
+        
+        if application_type != 'Change voice':
+                current_equalizer = Equalizer(amplitude, sampling_rate)
+                current_equalizer.to_frequency_domain()
+                if application_type == 'General Signal' and st.session_state.flag is False:
+                    dictionary = helpers.general_signal_dictionary(
+                        current_equalizer.frequency, dictionary)
+                    st.session_state.flag = True
+                value = helpers.create_sliders_dicts(dictionary)
+                current_equalizer.equalize_frequency_range(dictionary, value)
+                current_equalizer.inverse_frequency_domain()
+                new_signal = current_equalizer.signal_temporary_amplitude
+                sound_plot = amplitude[:len(new_signal)]
+                ECG_plot = amplitude[:len(new_signal)]
+        else:
+            new_signal = librosa.effects.pitch_shift(amplitude,sr=sampling_rate,n_steps=6)    
+            sound_plot = amplitude[:len(new_signal)]
         with col1:
             pause_btn = st.button("Pause")
         with col2:
@@ -55,12 +66,14 @@ def app(application_type):
         final_file = helpers.changed_audio(new_signal, sampling_rate)
         with col_graph:
             if signal_view == 'dynamic wave':
-                show_dynamic_plot(sound_plot, new_signal, start_btn,
-                                pause_btn, resume_btn, sampling_rate)
+                 show_dynamic_plot(sound_plot, new_signal, start_btn,
+                                pause_btn, resume_btn, sampling_rate, application_type)
 
             if signal_view == 'spectrogram':
-
-                with colu1:
-                    show_spectrogram(file_uploaded)
-                with colu2:
-                        show_spectrogram(final_file)
+                if application_type=='ECG':
+                    st.write('No spectrogram for ECG signals')
+                else:
+                    with colu1:
+                        show_spectrogram(file_uploaded)
+                    with colu2:
+                            show_spectrogram(final_file)
