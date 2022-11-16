@@ -85,9 +85,9 @@ def show_dynamic_plot(data, idata, start_btn, pause_btn, resume_btn, sr , applic
         max_time = int(max_time)
     time1 = np.linspace(0, max_time, len(data))
     if application_type=='ECG':
-        df = pd.DataFrame({'time': time1[::30],
-                       'amplitude': data[:: 30],
-                       'amplitude after processing': idata[::30]}, columns=[
+        df = pd.DataFrame({'time': time1,
+                       'amplitude': data,
+                       'amplitude after processing': idata}, columns=[
         'time', 'amplitude', 'amplitude after processing'])
     else:    
         df = pd.DataFrame({'time': time1[::300],
