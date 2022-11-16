@@ -10,9 +10,10 @@ from application import app
 APP_1 = "General Signal"
 APP_2 = 'Vowels'
 APP_3 = 'Music Instruments'
-APP_4 = 'forth app'
+APP_4 = 'ECG'
+App_5 = 'Change voice'
 applications = st.sidebar.radio(
-    "Modes :", (APP_1, APP_2, APP_3, APP_4), index=0, horizontal=True)
+    "Modes :", (APP_1, APP_2, APP_3, APP_4, App_5), index=0, horizontal=True)
 if applications == APP_1:
     app(APP_1)
 if applications == APP_2:
@@ -21,6 +22,8 @@ if applications == APP_3:
     app(APP_3)
 if applications == APP_4:
     app(APP_4)
+if applications == App_5:
+    app(App_5)
 
 hide_st_style =""" <style> #MainMenu {visibility: hidden;} footer {visibility: hidden;}
 header {visibility: hidden;} </style>"""

@@ -8,14 +8,12 @@ import numpy as np
 
 
 class Equalizer():
-    """_summary_
+    """ for the main functionality to equalize the inout signal
     """
 
     def __init__(self, signal_amplitude, sampling_rate=1):
-        # self.frequency_ranges=frequency_ranges
         self.signal_amplitude = signal_amplitude
         self.sampling_rate = sampling_rate
-        # self.signal_time=signal_time
         self.signal_temporary_amplitude = signal_amplitude
         self.frequency_magnitude = []
         self.frequency_temporary_magnitude = []
@@ -46,7 +44,6 @@ class Equalizer():
         self.frequency_phase = np.angle(fft_parameters)
         self.frequency_magnitude = np.abs(fft_parameters)
         self.frequency_temporary_magnitude = np.abs(fft_parameters)
-        # return self.temporary_frequency_magnitude, self.frequency_magnitude
 ###############################################################################################
 
     def equalize_frequency_range(self, dictionary, slider_value,previous_value,default_value):

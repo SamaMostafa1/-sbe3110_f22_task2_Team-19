@@ -69,7 +69,7 @@ def plot_animation(df):
     return figure
 
 
-def show_dynamic_plot(data, idata, start_btn, pause_btn, resume_btn, sr):
+def show_dynamic_plot(data, idata, start_btn, pause_btn, resume_btn, sr , application_type):
 
     if 'start' not in st.session_state:
         st.session_state['start'] = 0
@@ -84,10 +84,16 @@ def show_dynamic_plot(data, idata, start_btn, pause_btn, resume_btn, sr):
     if max_time > 1:
         max_time = int(max_time)
     time1 = np.linspace(0, max_time, len(data))
-    df = pd.DataFrame({'time': time1[::300],
+    if application_type=='ECG':
+        df = pd.DataFrame({'time': time1,
+                       'amplitude': data,
+                       'amplitude after processing': idata}, columns=[
+        'time', 'amplitude', 'amplitude after processing'])
+    else:    
+        df = pd.DataFrame({'time': time1[::300],
                         'amplitude': data[:: 300],
-                    'amplitude after processing': idata[::300]}, columns=[
-                    'time', 'amplitude', 'amplitude after processing'])
+                        'amplitude after processing': idata[::300]}, columns=[
+            'time', 'amplitude', 'amplitude after processing'])
     N = df.shape[0]  # number of elements in the dataframe
     burst = 10      # number of elements (months) to add to the plot
     size = burst
@@ -109,7 +115,7 @@ def show_dynamic_plot(data, idata, start_btn, pause_btn, resume_btn, sr):
         st.session_state.flag = 1
         for i in range(1, N):
             st.session_state.start = i
-            step_df = df.iloc[size:size+i]
+            step_df = df.iloc[0:size]
             lines = plot_animation(step_df)
             line_plot = line_plot.altair_chart(lines)
             size = i + burst
@@ -120,7 +126,7 @@ def show_dynamic_plot(data, idata, start_btn, pause_btn, resume_btn, sr):
         st.session_state.flag = 1
         for i in range(st.session_state.start, N):
             st.session_state.start = i
-            step_df = df.iloc[size:size+i]
+            step_df = df.iloc[0:size]
             lines = plot_animation(step_df)
             line_plot = line_plot.altair_chart(lines)
             st.session_state.size1 = size
@@ -129,7 +135,7 @@ def show_dynamic_plot(data, idata, start_btn, pause_btn, resume_btn, sr):
 
     elif pause_btn:
         st.session_state.flag = 0
-        step_df = df.iloc[size:st.session_state.size1]
+        step_df = df.iloc[0:st.session_state.size1]
         lines = plot_animation(step_df)
         line_plot = line_plot.altair_chart(lines)
 
@@ -142,7 +148,6 @@ def show_dynamic_plot(data, idata, start_btn, pause_btn, resume_btn, sr):
             st.session_state.size1 = size
             size = i + burst
             time.sleep(.000001)
-
 
 
 
