@@ -10,6 +10,7 @@ import numpy as np
 import streamlit as st
 import streamlit_vertical_slider as svs
 import wavio
+import pandas as pd
 from matplotlib import pyplot as plt
 
 ################################## Functions defination ################################
@@ -33,8 +34,19 @@ def upload_file(file_uploaded):
                 audio_file = open('Input/FileName', 'rb')
                 audio_bytes = audio_file.read()
                 st.sidebar.audio(audio_bytes, format='audio/wav')
-                sound_amplitude, sampling_rate = librosa.load('Input/FileName')
-                return sound_amplitude, sampling_rate
+                amplitude, sampling_rate = librosa.load('Input/FileName')
+                return amplitude, sampling_rate
+            
+        else :
+                df = pd.read_csv(file_uploaded)
+                st.session_state.uploaded = df
+                time = st.session_state.uploaded.iloc[:, 0]
+                amplitude = st.session_state.uploaded.iloc[:, 1]
+                sampling_rate = time[1]-time[0]
+                n_samples = len(time)
+                sampling_rate = n_samples/10
+                # T = 1 / Fs
+                return amplitude, sampling_rate
 ########################################################################################
 
 
