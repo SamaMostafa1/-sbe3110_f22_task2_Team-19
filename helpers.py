@@ -108,8 +108,8 @@ def create_sliders_dicts(dictionary):
             slider_value[column_index] = svs.vertical_slider(key=i,
                                                              step=1,
                                                              min_value=0,
-                                                             max_value=200,
-                                                             default_value=100,
+                                                             max_value=100,
+                                                             default_value=20,
                                                              slider_color='blue',
                                                              track_color='lightgray',
                                                              thumb_color='blue'

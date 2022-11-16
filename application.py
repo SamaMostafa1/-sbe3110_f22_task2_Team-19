@@ -13,6 +13,8 @@ def app(application_type):
     sliders,select=st.columns(2)
     if 'flag' not in st.session_state:
         st.session_state['flag'] = False
+    if 'previous_slider_value' not in st.session_state:
+            st.session_state['previous_slider_value'] = [] 
 
     # with open("style.css")as css:
     #     st.markdown(f"<style>{css.read() }</style>", unsafe_allow_html=True)
@@ -41,7 +43,11 @@ def app(application_type):
                 current_equalizer.frequency, dictionary)
             st.session_state.flag = True
         value = helpers.create_sliders_dicts(dictionary)
-        current_equalizer.equalize_frequency_range(dictionary, value)
+        st.write(value )
+        st.session_state.previous_slider_value=st.session_state.previous_slider_value
+        st.write(st.session_state.previous_slider_value)
+        current_equalizer.equalize_frequency_range(dictionary, value,st.session_state.previous_slider_value,20)
+        st.session_state.previous_slider_value=value
         current_equalizer.inverse_frequency_domain()
         new_signal = current_equalizer.signal_temporary_amplitude
         sound_plot = sound_amplitude[:len(new_signal)]

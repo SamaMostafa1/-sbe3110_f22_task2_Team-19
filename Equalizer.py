@@ -49,28 +49,23 @@ class Equalizer():
         # return self.temporary_frequency_magnitude, self.frequency_magnitude
 ###############################################################################################
 
-    def equalize_frequency_range(self, dictionary, slider_value):
+    def equalize_frequency_range(self, dictionary, slider_value,previous_value,default_value):
         """_summary_
-
         Args:
             dictionary (_type_): _description_
             slider_value (_type_): _description_
         """
         for slider_index, (key, value) in enumerate(dictionary.items()):
-            for freq_range in value:
-                if slider_value[slider_index] > -1:
-                    if slider_value[slider_index] == 100:
-                        self.frequency_temporary_magnitude[i] = self.frequency_magnitude[i]
-                    else:
-                        index = np.where((self.frequency > freq_range[0]) & (
-                            self.frequency < freq_range[1]))
-                        if slider_value[slider_index] > 100:
-                            hanning_window = (
-                                slider_value[slider_index]/100) * (1/np.hanning(freq_range[1] -
-                                                                                freq_range[0]))
-                        else:
-                            hanning_window = ((slider_value[slider_index])*np.hanning(freq_range[1]
-                                                                                    -freq_range[0]))
-                        for i, itr in zip(index, hanning_window):
-                            self.frequency_temporary_magnitude[i] = self.frequency_magnitude[i]*itr
+            for slider_index, (key ,value) in enumerate(dictionary.items()):
+                for range in value:
+                    if slider_value[slider_index]>-1:
+                        if(slider_value[slider_index]<default_value):
+                            index=np.where((self.frequency>range[0])&(self.frequency<range[1]))
+                            hanning_window=((slider_value[slider_index])*np.hanning(range[1]-range[0]))
+                            for i ,itr in zip(index,hanning_window):
+                                self.frequency_temporary_magnitude[i]=  self.frequency_magnitude[i]*itr
+                        elif (slider_value[slider_index]<default_value):
+                            index=np.where((self.frequency>range[0])&(self.frequency<range[1]))
+                            for i in zip(index):
+                                self.frequency_temporary_magnitude[i]=  self.frequency_magnitude[i]*slider_value[slider_index]
  ##############################################################################################
