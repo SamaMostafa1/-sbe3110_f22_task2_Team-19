@@ -38,19 +38,6 @@ def upload_file(file_uploaded):
 ########################################################################################
 
 
-def plot_signal(sound_amplitude, sampling_rate):
-    """_summary_
-    Args:
-        sound_amplitude (list): the signal amplitude
-        sampling_rate (number): the sample rate
-    """
-    fig, a_x = plt.subplots()
-    librosa.display.waveshow(
-        y=sound_amplitude, sr=sampling_rate, x_axis="time", ax=a_x)
-    st.pyplot(fig)
-########################################################################################
-
-
 def changed_audio(signal_changed_amplitude, sampling_rate):
     """_summary_
     Args:
