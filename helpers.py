@@ -77,12 +77,11 @@ def general_signal_dictionary (frequency ,dictionary ) :
         _type_: _description_
     """
     bin_max_frequency_value = math.ceil(len(frequency)/11)
-    i=0
+    i=10
     for key in dictionary:
-        dictionary[key][0].append(frequency[i*bin_max_frequency_value])
-        dictionary[key][0].append(frequency[(i+1)*bin_max_frequency_value])
-        print(dictionary)
-        i+=1
+        dictionary[key][0].append(frequency[(i-1)*bin_max_frequency_value])
+        dictionary[key][0].append(frequency[(i)*bin_max_frequency_value])
+        i-=1
     return dictionary
 
 
@@ -105,14 +104,14 @@ def create_sliders_dicts(dictionary):
         with columns[column_index]:
             st.write(i)
             slider_value[column_index] = svs.vertical_slider(key=i,
-                                                             step=1,
-                                                             min_value=0,
-                                                             max_value=100,
-                                                             default_value=20,
-                                                             slider_color='blue',
-                                                             track_color='lightgray',
-                                                             thumb_color='blue'
-                                                             )
+                                                            step=1,
+                                                            min_value=0,
+                                                            max_value=100,
+                                                            default_value=20,
+                                                            slider_color='blue',
+                                                            track_color='lightgray',
+                                                            thumb_color='blue'
+                                                            )
         column_index = column_index+1
 
     return slider_value

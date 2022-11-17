@@ -46,7 +46,7 @@ class Equalizer():
         self.frequency_temporary_magnitude = np.abs(fft_parameters)
 ###############################################################################################
 
-    def equalize_frequency_range(self, dictionary, slider_value,previous_value,default_value):
+    def equalize_frequency_range(self, dictionary, slider_value,default_value):
         """_summary_
         Args:
             dictionary (_type_): _description_

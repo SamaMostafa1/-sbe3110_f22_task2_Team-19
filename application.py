@@ -12,13 +12,6 @@ def app(application_type):
     with open("design.css")as f:
         st.markdown(f"<style>{f.read() }</style>",unsafe_allow_html=True)
     sliders,select=st.columns(2)
-    if 'flag' not in st.session_state:
-        st.session_state['flag'] = False
-    if 'previous_slider_value' not in st.session_state:
-            st.session_state['previous_slider_value'] = [] 
-
-    # with open("style.css")as css:
-    #     st.markdown(f"<style>{css.read() }</style>", unsafe_allow_html=True)
     file_uploaded = st.sidebar.file_uploader(label="upload",
                                             type=['wav','csv'], label_visibility='collapsed')
     if file_uploaded:
@@ -35,22 +28,21 @@ def app(application_type):
         signal_view = st.radio(
             "Modes :", ('dynamic wave', 'spectrogram'), index=0, horizontal=True,
             label_visibility='collapsed')
-        columns1 = [1, 1, 1]
+        columns1 = [1, 1, 1,5]
         col_graph,col_empty=st.columns(2)
         columns2 = [1, 1]
         colu1, colu2 = st.columns(columns2)
-        col1, col2,col3 = st.columns(columns1)
+        col1, col2,col3,col4 = st.columns(columns1)
         amplitude, sampling_rate = helpers.upload_file(file_uploaded)
         
         if application_type != 'Change voice':
                 current_equalizer = Equalizer(amplitude, sampling_rate)
                 current_equalizer.to_frequency_domain()
-                if application_type == 'General Signal' and st.session_state.flag is False:
+                if application_type == 'General Signal' :
                     dictionary = helpers.general_signal_dictionary(
                         current_equalizer.frequency, dictionary)
-                    st.session_state.flag = True
                 value = helpers.create_sliders_dicts(dictionary)
-                current_equalizer.equalize_frequency_range(dictionary, value)
+                current_equalizer.equalize_frequency_range(dictionary, value,20)
                 current_equalizer.inverse_frequency_domain()
                 new_signal = current_equalizer.signal_temporary_amplitude
                 sound_plot = amplitude[:len(new_signal)]

@@ -115,23 +115,23 @@ def show_dynamic_plot(data, idata, start_btn, pause_btn, resume_btn, sr , applic
         st.session_state.flag = 1
         for i in range(1, N):
             st.session_state.start = i
-            step_df = df.iloc[0:size]
+            step_df = df.iloc[size:size+i]
             lines = plot_animation(step_df)
             line_plot = line_plot.altair_chart(lines)
             size = i + burst
             st.session_state.size1 = size
-            time.sleep(.000001)
+            time.sleep(.1)
 
     elif resume_btn:
         st.session_state.flag = 1
         for i in range(st.session_state.start, N):
             st.session_state.start = i
-            step_df = df.iloc[0:size]
+            step_df = df.iloc[size:size+i]
             lines = plot_animation(step_df)
             line_plot = line_plot.altair_chart(lines)
             st.session_state.size1 = size
             size = i + burst
-            time.sleep(.000001)
+            time.sleep(.1)
 
     elif pause_btn:
         st.session_state.flag = 0
