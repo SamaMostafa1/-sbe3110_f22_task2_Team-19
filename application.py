@@ -58,20 +58,19 @@ def app(application_type):
         else:
             new_signal = librosa.effects.pitch_shift(amplitude,sr=sampling_rate,n_steps=6)    
             sound_plot = amplitude[:len(new_signal)]
-        with col1:
-            pause_btn = st.button("Pause")
-        with col2:
-            start_btn = st.button("Start")
-        with col3:
-            resume_btn = st.button("Resume")
 
         final_file = helpers.changed_audio(new_signal, sampling_rate)
         with col_graph:
             if signal_view == 'dynamic wave':
-                 show_dynamic_plot(sound_plot, new_signal, start_btn,
-                                pause_btn, resume_btn, sampling_rate, application_type)
-
-            if signal_view == 'spectrogram':
+                with col1:
+                    start_btn = st.button("Start")
+                with col2:
+                    pause_btn = st.button("Pause")
+                with col3:
+                    resume_btn = st.button("Resume")
+                show_dynamic_plot(sound_plot, new_signal, start_btn,
+                                pause_btn, resume_btn, sampling_rate, application_type)  
+            if signal_view == 'spectrogram':    
                 if application_type=='ECG':
                     st.write('No spectrogram for ECG signals')
                 else:
