@@ -37,16 +37,16 @@ def upload_file(file_uploaded):
                 amplitude, sampling_rate = librosa.load('Input/FileName')
                 return amplitude, sampling_rate
             
-        else :
-                df = pd.read_csv(file_uploaded)
-                st.session_state.uploaded = df
-                time = st.session_state.uploaded.iloc[:, 0]
-                amplitude = st.session_state.uploaded.iloc[:, 1]
-                sampling_rate = time[1]-time[0]
-                n_samples = len(time)
-                sampling_rate = n_samples/10
-                # T = 1 / Fs
-                return amplitude, sampling_rate
+        # else :
+        #         df = pd.read_csv(file_uploaded)
+        #         st.session_state.uploaded = df
+        #         time = st.session_state.uploaded.iloc[:, 0]
+        #         amplitude = st.session_state.uploaded.iloc[:, 1]
+        #         sampling_rate = time[1]-time[0]
+        #         n_samples = len(time)
+        #         sampling_rate = n_samples/10
+        #         # T = 1 / Fs
+        #         return amplitude, sampling_rate
 ########################################################################################
 
 
@@ -77,11 +77,12 @@ def general_signal_dictionary (frequency ,dictionary ) :
         _type_: _description_
     """
     bin_max_frequency_value = math.ceil(len(frequency)/11)
-    i=10
+    i=0
     for key in dictionary:
-        dictionary[key][0].append(frequency[(i-1)*bin_max_frequency_value])
-        dictionary[key][0].append(frequency[(i)*bin_max_frequency_value])
-        i-=1
+        dictionary[key][0].append(frequency[i*bin_max_frequency_value])
+        dictionary[key][0].append(frequency[(i+1)*bin_max_frequency_value])
+        print(dictionary)
+        i+=1
     return dictionary
 
 
@@ -104,14 +105,14 @@ def create_sliders_dicts(dictionary):
         with columns[column_index]:
             st.write(i)
             slider_value[column_index] = svs.vertical_slider(key=i,
-                                                            step=1,
-                                                            min_value=0,
-                                                            max_value=100,
-                                                            default_value=20,
-                                                            slider_color='blue',
-                                                            track_color='lightgray',
-                                                            thumb_color='blue'
-                                                            )
+                                                             step=0.1,
+                                                             min_value=0.0,
+                                                             max_value=5.0,
+                                                             default_value=1.0,
+                                                             slider_color='blue',
+                                                             track_color='lightgray',
+                                                             thumb_color='blue'
+                                                             )
         column_index = column_index+1
 
     return slider_value
