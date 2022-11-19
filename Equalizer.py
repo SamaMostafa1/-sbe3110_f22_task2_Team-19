@@ -35,11 +35,14 @@ class Equalizer():
         return signal_temp
 ###############################################################################################
 
-    def to_frequency_domain(self):
+    def to_frequency_domain(self, application_type, ecg_time):
         """_summary_
         """
-        self.frequency = np.fft.rfftfreq(
-            len(self.signal_amplitude), 1 / self.sampling_rate)
+        if application_type == 'ECG':
+            self.frequency = np.fft.rfftfreq(len(ecg_time), ecg_time[1]-ecg_time[0])
+        else:
+            self.frequency = np.fft.rfftfreq(
+                len(self.signal_amplitude), 1 / self.sampling_rate)
         fft_parameters = np.fft.rfft(self.signal_amplitude)
         self.frequency_phase = np.angle(fft_parameters)
         self.frequency_magnitude = np.abs(fft_parameters)
@@ -52,17 +55,22 @@ class Equalizer():
             dictionary (_type_): _description_
             slider_value (_type_): _description_
         """
+        
+        
         for slider_index, (key, value) in enumerate(dictionary.items()):
-            for slider_index, (key ,value) in enumerate(dictionary.items()):
-                for range in value:
+            
+                for freq_range in value:
                     if slider_value[slider_index]>-1:
-                        if(slider_value[slider_index]<default_value):
-                            index=np.where((self.frequency>range[0])&(self.frequency<range[1]))
-                            hanning_window=((slider_value[slider_index])*np.hanning(range[1]-range[0]))
+                        index=np.where((self.frequency>freq_range[0])&(self.frequency<freq_range[1]))
+                        if(slider_value[slider_index]>default_value):
+                           
+                            hanning_window=((slider_value[slider_index])*np.hanning(freq_range[1]-freq_range[0]))
                             for i ,itr in zip(index,hanning_window):
                                 self.frequency_temporary_magnitude[i]=  self.frequency_magnitude[i]*itr
                         elif (slider_value[slider_index]<default_value):
-                            index=np.where((self.frequency>range[0])&(self.frequency<range[1]))
+                           
                             for i in zip(index):
                                 self.frequency_temporary_magnitude[i]=  self.frequency_magnitude[i]*slider_value[slider_index]
- ##############################################################################################
+                                
+        
+##############################################################################################
