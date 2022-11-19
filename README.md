@@ -1,6 +1,6 @@
 # Equilizer - Task 2 DSP
 ## About
-
+Equilizer is a web-based equilizer tool that can be used in the music and speech industries, as well as in several biomedical applications such as hearing aids and abnormality detection.
 ## Team Members
 Name| Section 
 --- | --- |
@@ -28,12 +28,15 @@ pip install -r requirements.txt
 streamlit run main.py
 ```
 ## libraries
-<!-- - streamlit
-- pandas
-- numpy
-- plotly.express
-- plotly.graph_objs
-- matplotlib.pyplot -->
+- Time
+- Streamlit
+- Pandas
+- Numpy
+- Librosa
+- Wavio
+- Matplotlib
+- Altair
+- Pydub
 ## Features
 <!-- This web app allows user to
 - Load and plot a CSV Signal or compose and mix their own Sinusoidals.
