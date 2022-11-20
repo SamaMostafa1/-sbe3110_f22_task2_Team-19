@@ -34,6 +34,7 @@ ECG = {
     "arth2": [[130,200]],
 }
 
-Change_voice = {
-    "change":[[0,6]]
-}
+animals={
+    "wolf": [[300,1800]],
+    "bird": [[3000,5000]]
+    }

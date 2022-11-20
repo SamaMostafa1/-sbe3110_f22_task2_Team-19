@@ -77,12 +77,12 @@ def general_signal_dictionary (frequency ,dictionary ) :
         _type_: _description_
     """
     bin_max_frequency_value = math.ceil(len(frequency)/11)
-    i=0
+    i=10
     for key in dictionary:
-        dictionary[key][0].append(frequency[i*bin_max_frequency_value])
-        dictionary[key][0].append(frequency[(i+1)*bin_max_frequency_value])
+        dictionary[key][0].append(frequency[(i-1)*bin_max_frequency_value])
+        dictionary[key][0].append(frequency[(i)*bin_max_frequency_value])
         print(dictionary)
-        i+=1
+        i-=1
     return dictionary
 
 

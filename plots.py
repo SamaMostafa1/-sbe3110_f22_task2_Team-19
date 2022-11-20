@@ -7,6 +7,7 @@ import pydub
 import streamlit as st
 import pandas as pd
 from matplotlib import pyplot as plt
+
 @st.cache
 def handle_uploaded_audio_file(uploaded_file):
     """_summary_
@@ -50,104 +51,73 @@ def show_spectrogram(file):
 
 ##################################################animated plots###############################################
 
+# Second Graph
 def plot_animation(df):
     brush = alt.selection_interval()
     chart1 = alt.Chart(df).mark_line().encode(
-        x=alt.X('time', axis=alt.Axis(title='Time')),
-        # y=alt.Y('amplitude', axis=alt.Axis(title='Amplitude')),
-    ).properties(
-        width=300,
-        height=200
-    ).add_selection(
-        brush).interactive()
-
+            x=alt.X('time', axis=alt.Axis(title='Time')),
+            # y=alt.Y('amplitude', axis=alt.Axis(title='Amplitude')),
+        ).properties(
+            width=300,
+            height=150
+        ).add_selection(
+            brush).interactive()
     figure = chart1.encode(
-        y=alt.Y('amplitude', axis=alt.Axis(title='Amplitude'))) | chart1.encode(
-        y=alt.Y('amplitude after processing',
-                axis=alt.Axis(title='Amplitude after'))).add_selection(brush)
-
+                y=alt.Y('amplitude',axis=alt.Axis(title='Amplitude')))| chart1.encode(
+                y=alt.Y('amplitude after processing',axis=alt.Axis(title='Amplitude after'))).add_selection(
+            brush)
     return figure
 
+#def show_dynamic_plot(data, idata, start_btn, pause_btn, resume_btn, sr , application_type):
 
-def show_dynamic_plot(data, idata, start_btn, pause_btn, resume_btn, sr , application_type):
+def show_dynamic_plot(data, idata,resume_btn,sr,application_type):
 
-    if 'start' not in st.session_state:
-        st.session_state['start'] = 0
-    if 'size1' not in st.session_state:
-        st.session_state['size1'] = 0
-    if 'flag' not in st.session_state:
-        st.session_state['flag'] = 1
-    if 'time_start' not in st.session_state:
-        st.session_state['time_start']=0
-
-    max_time = len(data)/(sr)
-    if max_time > 1:
-        max_time = int(max_time)
-    time1 = np.linspace(0, max_time, len(data))
+    time1 = len(data)/(sr)
+    if time1>1:
+        time1 = int(time1)
+    time1 = np.linspace(0,time1,len(data)) 
     if application_type=='ECG':
-        df = pd.DataFrame({'time': time1,
+            df = pd.DataFrame({'time': time1,
                        'amplitude': data,
                        'amplitude after processing': idata}, columns=[
-        'time', 'amplitude', 'amplitude after processing'])
-    else:    
-        df = pd.DataFrame({'time': time1[::300],
-                        'amplitude': data[:: 300],
-                        'amplitude after processing': idata[::300]}, columns=[
-            'time', 'amplitude', 'amplitude after processing'])
+        'time', 'amplitude', 'amplitude after processing'])  
+    else:
+        df = pd.DataFrame({'time': time1[::300], 
+                            'amplitude': data[:: 300],
+                            'amplitude after processing': idata[::300]}, columns=[
+                            'time', 'amplitude','amplitude after processing'])
     N = df.shape[0]  # number of elements in the dataframe
     burst = 10      # number of elements (months) to add to the plot
-    size = burst
-
-    step_df = df.iloc[0:st.session_state.size1]
-    if st.session_state.size1 == 0:
+    size = burst 
+    step_df = df.iloc[st.session_state.play:st.session_state.size1]
+    if st.session_state.size1 ==0:
         step_df = df.iloc[0:N]
-
     lines = plot_animation(step_df)
     line_plot = st.altair_chart(lines)
-    line_plot = line_plot.altair_chart(lines)
+    line_plot= line_plot.altair_chart(lines)
+    
+    if resume_btn: 
+        st.session_state.flag = not(st.session_state.flag)
+        if st.session_state.flag :
+            for i in range( st.session_state.start,N):
+                st.session_state.start =i 
+                step_df = df.iloc[size:size+i]
+                lines = plot_animation(step_df)
+                line_plot = line_plot.altair_chart(lines)
+                st.session_state.size1 = size +i
+                st.session_state.play = size
+                size = i + burst
 
-    # lines = plot_animation(df)
-    # line_plot = st.altair_chart(lines)
-    N = df.shape[0]  # number of elements in the dataframe
-    burst = 10      # number of elements (months) to add to the plot
-    size = burst  # size of the current dataset
-    if start_btn:
-        st.session_state.flag = 1
-        for i in range(1, N):
-            st.session_state.start = i
-            step_df = df.iloc[0:size]
-            lines = plot_animation(step_df)
-            line_plot = line_plot.altair_chart(lines)
-            size = i + burst
-            st.session_state.size1 = size
-            time.sleep(.000001)
-
-    elif resume_btn:
-        st.session_state.flag = 1
-        for i in range(st.session_state.start, N):
-            st.session_state.start = i
-            step_df = df.iloc[0:size]
-            lines = plot_animation(step_df)
-            line_plot = line_plot.altair_chart(lines)
-            st.session_state.size1 = size
-            size = i + burst
-            time.sleep(.000001)
-
-    elif pause_btn:
-        st.session_state.flag = 0
-        step_df = df.iloc[0:st.session_state.size1]
-        lines = plot_animation(step_df)
-        line_plot = line_plot.altair_chart(lines)
-
-    if st.session_state.flag == 1:
-        for i in range(st.session_state.start, N):
-            st.session_state.start = i
-            step_df = df.iloc[0:size]
-            lines = plot_animation(step_df)
-            line_plot = line_plot.altair_chart(lines)
-            st.session_state.size1 = size
-            size = i + burst
-            time.sleep(.000001)
-
+                time.sleep(.1)
+    
+    if st.session_state.flag :
+        for i in range(st.session_state.start,N):
+                st.session_state.start =i 
+                step_df = df.iloc[size:size+i]
+                lines = plot_animation(step_df)
+                line_plot = line_plot.altair_chart(lines)
+                st.session_state.size1 = size +i
+                size = i + burst
+                time.sleep(.1)
 
 
